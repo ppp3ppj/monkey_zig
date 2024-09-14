@@ -1,7 +1,10 @@
 const std = @import("std");
 const token = @import("token/token.zig");
+const lexer = @import("lexer/lexer.zig");
 
 pub fn main() !void {
+    const l = lexer.Lexer.init("+-");
+    std.debug.print("{s}", .{l.input});
 }
 
 test "test lexer" {
