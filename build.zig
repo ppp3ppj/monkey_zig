@@ -15,6 +15,15 @@ pub fn build(b: *std.Build) void {
     // set a preferred release mode, allowing the user to decide how to optimize.
     const optimize = b.standardOptimizeOption(.{});
 
+
+    const token_module = b.addModule("token",.{
+        .root_source_file = b.path("src/token/token.zig"),
+    });
+
+    const lexer_module = b.addModule("lexer", .{
+        .root_source_file = b.path("src/lexer/lexer.zig"),
+    });
+
     const lib = b.addStaticLibrary(.{
         .name = "monkey_zig",
         // In this case the main source file is merely a path, however, in more
@@ -27,6 +36,7 @@ pub fn build(b: *std.Build) void {
     // This declares intent for the library to be installed into the standard
     // location when the user invokes the "install" step (the default step when
     // running `zig build`).
+
     b.installArtifact(lib);
 
     const exe = b.addExecutable(.{
@@ -39,6 +49,9 @@ pub fn build(b: *std.Build) void {
     // This declares intent for the executable to be installed into the
     // standard location when the user invokes the "install" step (the default
     // step when running `zig build`).
+
+    exe.root_module.addImport("token", token_module);
+    exe.root_module.addImport("lexer", lexer_module);
     b.installArtifact(exe);
 
     // This *creates* a Run step in the build graph, to be executed when another
@@ -82,10 +95,21 @@ pub fn build(b: *std.Build) void {
 
     const run_exe_unit_tests = b.addRunArtifact(exe_unit_tests);
 
+    const tests = b.addTest(.{
+        .root_source_file = b.path("test/tests.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
+
+    tests.root_module.addImport("token", token_module);
+    tests.root_module.addImport("lexer", lexer_module);
+
     // Similar to creating the run step earlier, this exposes a `test` step to
     // the `zig build --help` menu, providing a way for the user to request
     // running the unit tests.
     const test_step = b.step("test", "Run unit tests");
     test_step.dependOn(&run_lib_unit_tests.step);
     test_step.dependOn(&run_exe_unit_tests.step);
+
+    test_step.dependOn(&b.addRunArtifact(tests).step);
 }
