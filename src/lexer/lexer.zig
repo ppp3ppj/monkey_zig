@@ -1,4 +1,5 @@
 const std = @import("std");
+const token = @import("token");
 
 pub const Lexer = struct {
     const Self = @This();
@@ -24,5 +25,22 @@ pub const Lexer = struct {
         }
         self.position = self.read_position;
         self.read_position += 1;
+    }
+
+    pub fn next_token(self: *Self) token.Token {
+        const tok: token.Token = switch(self.ch) {
+            '{' => .lsquirly,
+            '}' => .rsquirly,
+            '(' => .lparen,
+            ')' => .rparen,
+            ',' => .comma,
+            ';' => .semicolon,
+            '+' => .plus,
+            0 => .eof,
+            else => .illegal,
+        };
+
+        self.read_char();
+        return tok;
     }
 };
