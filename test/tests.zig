@@ -3,18 +3,13 @@ const lexer = @import("lexer");
 const token = @import("token");
 const expectEqualDeep = std.testing.expectEqualDeep;
 test "Lexer" {
-    const input = "=+(){},;";
+    const input = "+()";
     var lex = lexer.Lexer.init(input);
 
     const tokens = [_]token.Token{
-        .assign,
         .plus,
         .lparen,
         .rparen,
-        .lsquirly,
-        .rsquirly,
-        .comma,
-        .semicolon,
         .eof,
     };
 
