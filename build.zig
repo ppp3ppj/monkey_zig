@@ -24,6 +24,8 @@ pub fn build(b: *std.Build) void {
         .root_source_file = b.path("src/lexer/lexer.zig"),
     });
 
+    lexer_module.addImport("token", token_module);
+
     const lib = b.addStaticLibrary(.{
         .name = "monkey_zig",
         // In this case the main source file is merely a path, however, in more
