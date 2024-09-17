@@ -29,6 +29,7 @@ pub const Lexer = struct {
 
     pub fn next_token(self: *Self) token.Token {
         const tok: token.Token = switch(self.ch) {
+            '=' => .assign,
             '{' => .lsquirly,
             '}' => .rsquirly,
             '(' => .lparen,
