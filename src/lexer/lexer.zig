@@ -38,10 +38,29 @@ pub const Lexer = struct {
             ';' => .semicolon,
             '+' => .plus,
             0 => .eof,
+            'a'...'z', 'A'...'Z', '_' => {
+                const ident = self.read_identifier();
+
+                return .{.ident = ident};
+            },
             else => .illegal,
         };
 
         self.read_char();
         return tok;
+    }
+
+    fn isLetter(ch: u8) bool {
+        return std.ascii.isAlphabetic(ch) or ch == '_';
+    }
+
+    fn read_identifier(self: *Self) []const u8 {
+        const position = self.position;
+
+        while(isLetter(self.ch)) {
+            self.read_char();
+        }
+
+        return self.input[position..self.position];
     }
 };
