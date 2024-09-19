@@ -14,6 +14,18 @@ pub const Token = union(enum) {
     rparen,
     lsquirly,
     rsquirly,
-    function,
+
     let,
+    function,
+    if_token,
+
+    pub fn keyword(ident: []const u8) ?Token {
+        const map = std.StaticStringMap(Token).initComptime(.{
+        .{ "let", .let },
+        .{ "fn", .function },
+        .{ "if", .if_token },
+        });
+
+        return map.get(ident);
+    }
 };
