@@ -1,5 +1,6 @@
 const std = @import("std");
 const token = @import("token");
+//const token = @import("../token/token.zig");
 
 pub const Lexer = struct {
     const Self = @This();
@@ -18,7 +19,7 @@ pub const Lexer = struct {
     }
 
     pub fn read_char(self: *Self) void {
-        if(self.read_position >= self.input.len) {
+        if (self.read_position >= self.input.len) {
             self.ch = 0;
         } else {
             self.ch = self.input[self.read_position];
@@ -28,7 +29,9 @@ pub const Lexer = struct {
     }
 
     pub fn next_token(self: *Self) token.Token {
-        const tok: token.Token = switch(self.ch) {
+        self.skip_whitespace();
+
+        const tok: token.Token = switch (self.ch) {
             '=' => .assign,
             '{' => .lsquirly,
             '}' => .rsquirly,
@@ -40,14 +43,40 @@ pub const Lexer = struct {
             0 => .eof,
             'a'...'z', 'A'...'Z', '_' => {
                 const ident = self.read_identifier();
-
-                return .{.ident = ident};
+                std.debug.print("{s}", .{ident});
+                if (token.Token.keyword(ident)) |t| {
+                    return t;
+                }
+                return .{ .ident = ident };
+            },
+            '0'...'9' => {
+                const int = self.read_int();
+                return .{ .int = int };
             },
             else => .illegal,
         };
 
         self.read_char();
         return tok;
+    }
+
+    fn isInt(ch: u8) bool {
+        return std.ascii.isDigit(ch);
+    }
+    fn read_int(self: *Self) []const u8 {
+        const position = self.position;
+
+        while (isInt(self.ch)) {
+            self.read_char();
+        }
+
+        return self.input[position..self.position];
+    }
+
+    fn skip_whitespace(self: *Self) void {
+        while (std.ascii.isWhitespace(self.ch)) {
+            self.read_char();
+        }
     }
 
     fn isLetter(ch: u8) bool {
@@ -57,7 +86,7 @@ pub const Lexer = struct {
     fn read_identifier(self: *Self) []const u8 {
         const position = self.position;
 
-        while(isLetter(self.ch)) {
+        while (isLetter(self.ch)) {
             self.read_char();
         }
 
