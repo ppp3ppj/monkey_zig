@@ -34,14 +34,49 @@ test "Lexer" {
 test "Lexer - Full" {
     const input =
         \\let five = 5;
+        \\let ten = 10;
+        \\let add = fn(x, y) {
+        \\  x + y;
+        \\};
+        \\let result = add(five, ten);
     ;
-
     var lex = lexer.Lexer.init(input);
     const tokens = [_]token.Token{
         .let,
-        .{.ident = "five"},
+        .{ .ident = "five" },
         .assign,
-        .{.int = "5"},
+        .{ .int = "5" },
+        .semicolon,
+        .let,
+        .{ .ident = "ten" },
+        .assign,
+        .{ .int = "10" },
+        .semicolon,
+        .let,
+        .{ .ident = "add" },
+        .assign,
+        .function,
+        .lparen,
+        .{ .ident = "x" },
+        .comma,
+        .{ .ident = "y" },
+        .rparen,
+        .lsquirly,
+        .{ .ident = "x" },
+        .plus,
+        .{ .ident = "y" },
+        .semicolon,
+        .rsquirly,
+        .semicolon,
+        .let,
+        .{ .ident = "result" },
+        .assign,
+        .{ .ident = "add" },
+        .lparen,
+        .{ .ident = "five" },
+        .comma,
+        .{ .ident = "ten" },
+        .rparen,
         .semicolon,
 
         .eof,
