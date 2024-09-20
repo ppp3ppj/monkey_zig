@@ -28,11 +28,25 @@ pub const Lexer = struct {
         self.read_position += 1;
     }
 
+    fn peek_char(self: *Self) u8 {
+        if (self.read_position >= self.input.len) {
+            return 0;
+        } else {
+            return self.input[self.read_position];
+        }
+    }
+
     pub fn next_token(self: *Self) token.Token {
         self.skip_whitespace();
 
         const tok: token.Token = switch (self.ch) {
-            '=' => .assign,
+            '=' => blk: {
+                if (self.peek_char() == '=') {
+                    break :blk .equal;
+                } else {
+                    break :blk .assign;
+                }
+            },
             '{' => .lsquirly,
             '}' => .rsquirly,
             '(' => .lparen,
@@ -43,7 +57,6 @@ pub const Lexer = struct {
             0 => .eof,
             'a'...'z', 'A'...'Z', '_' => {
                 const ident = self.read_identifier();
-                std.debug.print("{s}", .{ident});
                 if (token.Token.keyword(ident)) |t| {
                     return t;
                 }
