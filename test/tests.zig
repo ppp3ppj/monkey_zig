@@ -41,6 +41,7 @@ test "Lexer - Full" {
         \\let result = add(five, ten);
 
         \\!-/*5;
+        \\5 < 10 > 5;
     ;
     var lex = lexer.Lexer.init(input);
     const tokens = [_]token.Token{
@@ -85,6 +86,13 @@ test "Lexer - Full" {
         .minus,
         .slash,
         .asterisk,
+        .{.int = "5"},
+        .semicolon,
+
+        .{.int = "5"},
+        .less_than,
+        .{.int = "10"},
+        .greater_than,
         .{.int = "5"},
         .semicolon,
 
