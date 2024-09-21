@@ -6,8 +6,6 @@ pub const Token = union(enum) {
 
     illegal,
     eof,
-    assign,
-    plus,
     comma,
     semicolon,
     lparen,
@@ -16,6 +14,16 @@ pub const Token = union(enum) {
     rsquirly,
 
     equal,
+    assign,
+    plus,
+    minus,
+    bang,
+    dash,
+    asterisk,
+    slash,
+
+    less_than,
+    greater_than,
 
     let,
     function,
@@ -24,10 +32,10 @@ pub const Token = union(enum) {
 
     pub fn keyword(ident: []const u8) ?Token {
         const map = std.StaticStringMap(Token).initComptime(.{
-        .{ "let", .let },
-        .{ "fn", .function },
-        .{ "if", .if_token },
-        .{ "return", .return_token },
+            .{ "let", .let },
+            .{ "fn", .function },
+            .{ "if", .if_token },
+            .{ "return", .return_token },
         });
 
         return map.get(ident);
