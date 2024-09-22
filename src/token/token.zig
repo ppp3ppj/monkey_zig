@@ -28,6 +28,9 @@ pub const Token = union(enum) {
     let,
     function,
     if_token,
+    else_token,
+    true_token,
+    false_token,
     return_token,
 
     pub fn keyword(ident: []const u8) ?Token {
@@ -35,6 +38,9 @@ pub const Token = union(enum) {
             .{ "let", .let },
             .{ "fn", .function },
             .{ "if", .if_token },
+            .{ "else", .else_token },
+            .{ "true", .true_token },
+            .{ "false", .false_token },
             .{ "return", .return_token },
         });
 
