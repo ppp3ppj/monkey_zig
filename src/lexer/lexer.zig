@@ -42,6 +42,7 @@ pub const Lexer = struct {
         const tok: token.Token = switch (self.ch) {
             '=' => blk: {
                 if (self.peek_char() == '=') {
+                    self.read_char();
                     break :blk .equal;
                 } else {
                     break :blk .assign;
@@ -55,7 +56,14 @@ pub const Lexer = struct {
             ';' => .semicolon,
             '+' => .plus,
             '-' => .minus,
-            '!' => .bang,
+            '!' => blk: {
+                if (self.peek_char() == '=') {
+                    self.read_char();
+                    break :blk .not_equal;
+                } else {
+                    break :blk .bang;
+                }
+            },
             '/' => .slash,
             '*' => .asterisk,
             '<' => .less_than,
