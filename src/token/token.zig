@@ -14,6 +14,8 @@ pub const Token = union(enum) {
     rsquirly,
 
     equal,
+    not_equal,
+
     assign,
     plus,
     minus,
