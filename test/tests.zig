@@ -48,6 +48,8 @@ test "Lexer - Full" {
         \\} else {
         \\  return false;
         \\}
+        \\10 == 10;
+        \\10 != 9;
     ;
     var lex = lexer.Lexer.init(input);
     const tokens = [_]token.Token{
@@ -119,6 +121,15 @@ test "Lexer - Full" {
         .false_token,
         .semicolon,
         .rsquirly,
+
+        .{ .int = "10" },
+        .equal,
+        .{ .int = "10" },
+        .semicolon,
+        .{ .int = "10" },
+        .not_equal,
+        .{ .int = "9" },
+        .semicolon,
 
         .eof,
     };
