@@ -42,6 +42,12 @@ test "Lexer - Full" {
 
         \\!-/*5;
         \\5 < 10 > 5;
+
+        \\if (5 < 10) {
+        \\  return true;
+        \\} else {
+        \\  return false;
+        \\}
     ;
     var lex = lexer.Lexer.init(input);
     const tokens = [_]token.Token{
@@ -95,6 +101,24 @@ test "Lexer - Full" {
         .greater_than,
         .{.int = "5"},
         .semicolon,
+
+        .if_token,
+        .lparen,
+        .{.int = "5"},
+        .less_than,
+        .{.int = "10"},
+        .rparen,
+        .lsquirly,
+        .return_token,
+        .true_token,
+        .semicolon,
+        .rsquirly,
+        .else_token,
+        .lsquirly,
+        .return_token,
+        .false_token,
+        .semicolon,
+        .rsquirly,
 
         .eof,
     };
