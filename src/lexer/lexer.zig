@@ -18,6 +18,10 @@ pub const Lexer = struct {
         return lex;
     }
 
+    pub fn has_tokens(self: *Self) bool {
+        return self.ch != 0;
+    }
+
     pub fn read_char(self: *Self) void {
         if (self.read_position >= self.input.len) {
             self.ch = 0;
